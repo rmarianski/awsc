@@ -1,0 +1,10 @@
+prefix=HOME/opt
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: awsc
+Description: awsc
+Version: 0.0.1
+Cflags: -I${includedir}
+Libs: -L${libdir} -lawsc
