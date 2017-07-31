@@ -4,17 +4,20 @@ OBJECTS = $(NAME).o memmgr.o
 LIBRARY_VERSION = 0.0.1
 HEADERS = awsc.h
 CC = g++
-CPPFLAGS = -DAWS_CUSTOM_MEMORY_MANAGEMENT -DUSE_IMPORT_EXPORT `pkg-config --cflags memarena aws-cpp-sdk` -g -Wall -std=c++11 -pedantic -fPIC -O3 -Wno-write-strings
+CPPFLAGS = -DAWS_CUSTOM_MEMORY_MANAGEMENT -DUSE_IMPORT_EXPORT `pkg-config --cflags memarena aws-cpp-sdk` -g -Wall -std=c++11 -pedantic -fPIC -O0 -Wno-write-strings
 LDLIBS = `pkg-config --libs memarena aws-cpp-sdk`
 DESTDIR = $(HOME)/opt
 
 all: shared static
 
-shared: $(OBJECTS)
-	$(CC) -shared -o $(LIB).so.$(LIBRARY_VERSION) $<
+shared: $(LIB).so.$(LIBRARY_VERSION)
+static: $(LIB).a
 
-static: $(OBJECTS)
-	ar rcs $(LIB).a $<
+$(LIB).so.$(LIBRARY_VERSION): $(OBJECTS)
+	$(CC) -shared -o $(LIB).so.$(LIBRARY_VERSION) $(OBJECTS)
+
+$(LIB).a: $(OBJECTS)
+	ar rcs $(LIB).a $(OBJECTS)
 
 clean:
 	rm -f $(OBJECTS) $(LIB).so.$(LIBRARY_VERSION) $(LIB).a check.o check
